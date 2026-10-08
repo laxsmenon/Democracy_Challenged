@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>US Multinationals and Irish Tax</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: one reading column. Findings first, then the Ireland chart, the terms, the profit chart, and one expandable card per group in ranked order. Every chart is a list of rows (name | bar | value) that stacks on phones. */
+:root{
+  --bg:#ffffff; --panel:#ffffff; --tint:#f3f5f8; --ink:#151a22; --ink2:#454d5b; --mut:#6d7685; --line:#dde1e8; --track:#eaedf2;
+  --us:#2a6fc9; --ire:#e2622b; --oth:#17a072; --profit:#5040b0; --rev:#d99400; --loss:#b8384f;
+  --todo-bg:#fff3c4; --todo-ink:#5a4300;
+  color-scheme:light;
+  --display:"Newsreader",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding-inline:16px;padding-block:32px 56px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:32px}
+a{color:var(--us);text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--us);outline-offset:3px;border-radius:3px}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0;color:var(--ink)}
+h1{font-size:2.1rem;line-height:1.12}
+h2{font-size:1.45rem;line-height:1.2}
+h3{font-size:1.1rem;line-height:1.3}
+p{margin:0}
+.eyebrow{font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.lede{font-size:1.08rem;color:var(--ink2);max-width:64ch}
+.meta{font-size:.85rem;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 16px}
+header{display:flex;flex-direction:column;gap:12px}
+
+/* findings */
+.findings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.fd{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.fd .n{font-family:var(--display);font-size:2rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+.fd .n.ire{color:var(--ire)} .fd .n.loss{color:var(--loss)}
+.fd p{font-size:.92rem;color:var(--ink2)}
+.findtext{display:flex;flex-direction:column;gap:14px}
+.findtext>h2{margin-bottom:2px}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.fc{border:1px solid var(--line);border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0;background:var(--panel)}
+.fc.lead{grid-column:1/-1;background:var(--tint);border-color:transparent}
+.fc .tag{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--mut)}
+.fc h3{font-family:var(--display);font-size:1.25rem;line-height:1.25;font-weight:600}
+.fc.lead h3{font-size:1.5rem}
+.fc p{font-size:.95rem;color:var(--ink2)}
+.big{font-family:var(--display);font-weight:600;font-size:2.6rem;line-height:1;color:var(--ire);font-variant-numeric:tabular-nums}
+.stack{display:flex;height:30px;border-radius:5px;overflow:hidden;gap:2px}
+.stack i{display:block}
+.stacklab{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.84rem;color:var(--ink2)}
+.stacklab span{display:inline-flex;align-items:center;gap:6px}
+.mb{display:flex;flex-direction:column;gap:8px}
+.mbr{display:grid;grid-template-columns:96px minmax(0,1fr) 104px;gap:10px;align-items:center;font-size:.86rem}
+.mbr .t{height:14px;background:var(--track);border-radius:3px;overflow:hidden}
+.mbr .t i{display:block;height:100%;border-radius:3px}
+.mbr .v{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink2)}
+.mbr .v b{color:var(--ink)}
+.lossv{color:var(--loss);font-weight:600}
+.dots{display:flex;flex-wrap:wrap;gap:6px}
+.dots i{width:18px;height:18px;border-radius:50%;display:block}
+.dots .on{background:var(--ire)} .dots .off{border:2px solid var(--mut)} .dots .na{background:repeating-linear-gradient(135deg,var(--track) 0 3px,var(--line) 3px 5px)}
+@media(max-width:680px){.fgrid{grid-template-columns:1fr}.big{font-size:2.2rem}.mbr{grid-template-columns:72px minmax(0,1fr) 100px}}
+
+/* chart panels */
+section.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:24px 22px 20px;display:flex;flex-direction:column;gap:14px}
+.dek{color:var(--ink2);max-width:68ch;font-size:.97rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.84rem;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:3px;flex:none;display:inline-block}
+.rows{display:flex;flex-direction:column;gap:9px}
+.grp{font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-top:10px}
+.grpnote{font-size:.85rem;color:var(--ink2);margin-top:-4px;max-width:70ch}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr) 200px;gap:12px;align-items:center}
+.nm{font-weight:500;font-size:.92rem}
+.val{font-size:.85rem;color:var(--ink2);font-variant-numeric:tabular-nums}
+.val b{color:var(--ink);font-weight:600}
+.bar{display:flex;gap:2px;height:20px;border-radius:4px;overflow:hidden}
+.seg{height:100%;min-width:2px}
+.seg.us{background:var(--us)} .seg.ire{background:var(--ire)} .seg.oth{background:var(--oth)}
+.bar.none{background:repeating-linear-gradient(135deg,var(--track) 0 6px,var(--panel) 6px 10px);border:1px dashed var(--line)}
+.trk{position:relative;height:26px;background:
+  linear-gradient(var(--line),var(--line)) 0 0/1px 100% no-repeat,
+  linear-gradient(var(--line),var(--line)) 25% 0/1px 100% no-repeat,
+  linear-gradient(var(--line),var(--line)) 50% 0/1px 100% no-repeat,
+  linear-gradient(var(--line),var(--line)) 75% 0/1px 100% no-repeat,
+  linear-gradient(var(--line),var(--line)) 100% 0/1px 100% no-repeat}
+.trk .b{position:absolute;left:0;height:10px;border-radius:0 4px 4px 0;min-width:2px}
+.trk .b.rev{top:2px;background:var(--rev)}
+.trk .b.pro{top:14px;background:var(--profit)}
+.trk .b.over{border-radius:0}
+.trk .b.over::after{content:"";position:absolute;right:-8px;top:-2px;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:9px solid var(--profit)}
+.axis{display:grid;grid-template-columns:150px minmax(0,1fr) 200px;gap:12px;font-size:.75rem;color:var(--mut);font-variant-numeric:tabular-nums}
+.axis .t{position:relative;height:16px}
+.axis .t span{position:absolute;transform:translateX(-50%)}
+.axis .t span:first-child{transform:none}.axis .t span:last-child{transform:translateX(-100%)}
+.note{font-size:.85rem;color:var(--ink2);max-width:72ch}
+.callout{border-left:3px solid var(--ire);padding:10px 14px;background:var(--tint);font-size:.9rem;color:var(--ink2);max-width:72ch}
+.callout b{color:var(--ink)}
+details.tbl summary{cursor:pointer;color:var(--ink2);font-weight:500;font-size:.88rem}
+.tw{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.84rem}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--ink2);font-size:.78rem}
+
+/* terms */
+.terms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+.term{display:flex;flex-direction:column;gap:4px;min-width:0}
+.term h3{font-family:var(--body);font-size:.98rem;font-weight:600}
+.term p{font-size:.93rem;color:var(--ink2)}
+.term.wide{grid-column:1/-1}
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:6px}
+.compare div{border:1px solid var(--line);border-radius:5px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.compare b{font-size:.92rem}
+.compare span{font-size:.88rem;color:var(--ink2)}
+
+/* group cards */
+.cards{display:flex;flex-direction:column;gap:8px}
+details.card{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+details.card>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px}
+details.card>summary::-webkit-details-marker{display:none}
+.rk{font-family:var(--display);font-size:1.1rem;color:var(--mut);font-variant-numeric:tabular-nums}
+.cn{font-weight:600;font-size:1rem}
+.cs{font-size:.8rem;color:var(--mut)}
+.chip{font-size:.78rem;padding:3px 9px;border-radius:20px;white-space:nowrap;font-variant-numeric:tabular-nums;border:1px solid var(--line);color:var(--ink2)}
+.chip.loss{color:var(--loss);border-color:currentColor}
+.chip.up{color:var(--profit);border-color:currentColor}
+details.card>summary::after{content:"+";font-size:1.2rem;color:var(--mut);grid-column:3;grid-row:1;justify-self:end;display:none}
+.cbody{border-top:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:16px}
+.plain{font-size:.97rem;color:var(--ink2);max-width:68ch}
+.plain b{color:var(--ink)}
+.blk{display:flex;flex-direction:column;gap:6px}
+.blk h4{margin:0;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.blk h4 a{font-size:.78rem;letter-spacing:0;text-transform:none;font-weight:500}
+.split{display:flex;height:16px;border-radius:4px;overflow:hidden;gap:2px}
+.split .a{background:var(--us)} .split .b2{background:var(--rev)}
+.split.p .a{background:var(--us)} .split.p .b2{background:var(--profit)}
+.splitlab{display:flex;justify-content:space-between;gap:10px;font-size:.84rem;color:var(--ink2);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.dvg{display:grid;grid-template-columns:1fr 2px 1fr;height:16px;align-items:stretch}
+.dvg .l{display:flex;justify-content:flex-end}.dvg .r{display:flex}
+.dvg .l i{background:var(--loss);border-radius:4px 0 0 4px;display:block}
+.dvg .r i{background:var(--profit);border-radius:0 4px 4px 0;display:block}
+.dvg .m{background:var(--ink2)}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kv div{border:1px solid var(--line);border-radius:5px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kv .k{font-size:.8rem;color:var(--mut)}
+.kv .v{font-family:var(--display);font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.kv .s{font-size:.82rem;color:var(--ink2)}
+.cnote{font-size:.88rem;color:var(--ink2);background:var(--tint);border-radius:5px;padding:10px 12px;max-width:72ch}
+.cnote b{color:var(--ink)}
+.src{font-size:.84rem;display:flex;flex-wrap:wrap;gap:4px 16px}
+
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch;color:var(--ink2)}
+.prose b{color:var(--ink)}
+.todo{background:var(--todo-bg);color:var(--todo-ink);padding:1px 4px;border-radius:3px}
+footer{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column;gap:10px;font-size:.86rem;color:var(--ink2)}
+
+@media(max-width:680px){
+  h1{font-size:1.65rem} h2{font-size:1.25rem}
+  section.panel{padding:18px 14px}
+  .findings{grid-template-columns:1fr}
+  .row{grid-template-columns:minmax(0,1fr) auto;gap:3px 10px}
+  .row .nm{grid-column:1} .row .val{grid-column:2;grid-row:1;text-align:right}
+  .row .bar,.row .trk{grid-column:1/-1}
+  .rows{gap:14px}
+  .axis{grid-template-columns:minmax(0,1fr)} .axis>div:not(.t){display:none}
+  .terms,.compare{grid-template-columns:1fr}
+  details.card>summary{grid-template-columns:24px minmax(0,1fr);row-gap:6px}
+  details.card>summary .chip{grid-column:2;justify-self:start}
+}
+@media(prefers-reduced-motion:no-preference){details.card[open]>.cbody{animation:in .2s ease-out}}
+@keyframes in{from{opacity:.4}to{opacity:1}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Corporate tax and Ireland</div>
+  <h1>How much income tax large US multinationals pay in Ireland, and where they report their profits</h1>
+  <p class="lede">We read the latest annual reports of 16 large US pharma and tech multinationals. New US accounting rules now make them name the countries where they pay the most tax, so for the first time Ireland appears directly in their accounts.</p>
+  <div class="meta"><span>Last updated 8 October 2026</span><span>16 multinationals</span><span>Annual reports for 2025 (2026 for Microsoft, Oracle and Salesforce)</span></div>
+</header>
+
+<div class="findtext" id="findtext"></div>
+
+<section class="panel" id="ireland">
+  <div class="eyebrow">Tax paid to Ireland</div>
+  <h2>Eli Lilly paid 61% of all its income tax to Ireland</h2>
+  <p class="dek">Each bar is all the income tax a group paid in cash in its latest year, split by where it was paid. A group has to name a country only when it receives 5% or more of that total.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--us)"></i>United States</span>
+    <span><i class="sw" style="background:var(--ire)"></i>Ireland</span>
+    <span><i class="sw" style="background:var(--oth)"></i>Other countries</span>
+  </div>
+  <div class="rows" id="c1"></div>
+  <div class="callout" id="c1note"></div>
+  <details class="tbl"><summary>View as a table, with links to each filing</summary><div class="tw"><table id="t1"></table></div></details>
+</section>
+
+<section class="panel" id="terms">
+  <div class="eyebrow">Reading the numbers</div>
+  <h2>What the terms on this page mean</h2>
+  <div class="terms">
+    <div class="term wide">
+      <h3>Tax charged in the accounts and tax paid in cash</h3>
+      <p>A group's accounts show tax in two different ways, and the two can differ a lot in any one year.</p>
+      <div class="compare">
+        <div><b>Tax charged in the accounts</b><span>The tax that belongs to this year's profit, whether the group pays it now or in later years. It is the figure used to work out a group's tax rate.</span></div>
+        <div><b>Tax paid in cash</b><span>The money that actually left the group for tax authorities during the year. It can include tax on earlier years' profits and instalments of older bills, minus any refunds.</span></div>
+      </div>
+      <p style="margin-top:8px">Pfizer is an example. Its tax charge for 2025 was a credit of $0.3bn, because of tax it expects to save in later years, but it paid $4.7bn in cash. The Ireland chart uses tax paid in cash, because that is what groups now report by country.</p>
+    </div>
+    <div class="term">
+      <h3>Pre-tax profit</h3>
+      <p>What a group earned after its costs, before income tax. Groups split it between profit made by their US companies and profit made by their companies abroad.</p>
+    </div>
+    <div class="term">
+      <h3>Where profit is reported</h3>
+      <p>A multinational is a group of many companies. Profit is counted in the country of the company that records it, which often depends on which company owns patents or other rights. Sales are counted where the customers are.</p>
+    </div>
+    <div class="term">
+      <h3>The 5% rule</h3>
+      <p>For financial years starting in 2025 or later, US accounting rules (known as ASU 2023-09) require groups to name any country that receives 5% or more of the income tax they paid in cash. Countries below that line are grouped together as "other".</p>
+    </div>
+    <div class="term">
+      <h3>A US loss</h3>
+      <p>Some groups report a loss in the United States while making a large profit abroad. The group as a whole is still profitable. In the chart below, this is marked with an arrow.</p>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="profit">
+  <div class="eyebrow">Sales and profit abroad</div>
+  <h2>Six of eight pharma groups report more of their profit abroad than their sales abroad</h2>
+  <p class="dek">The upper bar is the share of a group's sales made outside the United States. The lower bar is the share of its pre-tax profit reported outside the United States. Where the lower bar is longer, the group reports more of its profit abroad than it sells there.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--rev)"></i>Share of sales abroad</span>
+    <span><i class="sw" style="background:var(--profit)"></i>Share of profit abroad</span>
+    <span><i style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid var(--profit);display:inline-block"></i>Over 100%, because the group made a loss in the US</span>
+  </div>
+  <div class="rows" id="c2"></div>
+  <div class="axis"><div></div><div class="t"><span style="left:0">0%</span><span style="left:25%">25%</span><span style="left:50%">50%</span><span style="left:75%">75%</span><span style="left:100%">100%</span></div><div></div></div>
+  <p class="note">Salesforce is left out because it does not report its US sales separately. Profit splits marked * are partly estimated from rounded figures in the group's report. Sales are counted where the customer is and profit where the company that records it is, so the two are not measured the same way.</p>
+  <details class="tbl"><summary>View as a table</summary><div class="tw"><table id="t2"></table></div></details>
+</section>
+
+<section id="groups" style="display:flex;flex-direction:column;gap:14px">
+  <div class="eyebrow">Each group in detail</div>
+  <h2>The 16 multinationals, ranked</h2>
+  <p class="dek">Groups are ordered by how much bigger their share of profit abroad is than their share of sales abroad, as in the chart above. Open a group to see its sales, profit and tax, with links to the tables in its annual report.</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section class="panel" id="about">
+  <div class="eyebrow">About this page</div>
+  <h2>Sources, method and updates</h2>
+  <div class="prose">
+    <p>All figures come from each group's latest annual report (Form 10-K) filed with the US Securities and Exchange Commission. We took them from the income tax note and the note on sales by country. Amounts are in US dollars. Each group's card links to the tables we used.</p>
+    <p>We started with 16 large US pharma and tech multinationals, two industries with major operations in Ireland.</p>
+    <p><b>We will update this page as new annual reports come out.</b> Apple's next report, expected around the end of October 2026, should be the first to show its tax paid by country. Reports for 2026 from the other groups, whose years end in December, follow from February 2027. We also plan to add more groups.</p>
+  </div>
+</section>
+
+<footer>
+  <p>This page is part of Democracy Challenged, a research project at the School of Politics and International Relations, University College Dublin. Democracy Challenged has received funding from the European Research Council (ERC) under the Horizon Europe programme (grant agreement <a href="https://cordis.europa.eu/project/id/101125672" target="_blank" rel="noopener">101125672</a>).</p>
+  <p>Last updated 8 October 2026.</p>
+</footer>
+</div>
+
+<script>
+const E='https://www.sec.gov/Archives/edgar/data/';
+/* $ millions. cu/cfo = tax charged for the year itself (US / abroad); def = timing differences; tot = total tax charged.
+   pd/pi/po/pt = cash tax paid: US / Ireland / other / total. ru/rf = sales in US / abroad. */
+const D=[
+{n:'AbbVie',sec:'Pharma',fy:'Year to Dec 2025',ptd:-3540,ptf:10137,cu:1230,cfo:1626,def:-492,tot:2364,pd:2185,pi:431,po:1010,pt:3626,ru:46603,rf:14557,
+ f:'1551152/000155115226000008/',doc:'abbv-20251231.htm',r:{pre:'R93',tax:'R94',paid:'R98',rev:'R102'},
+ note:'Puerto Rico ($297m) is also named.'},
+{n:'Johnson & Johnson',sec:'Pharma',fy:'Year to Dec 2025',ptd:15254,ptf:17327,cu:1163,cfo:3076,def:1538,tot:5777,pd:3746,pi:600,po:2193,pt:6539,ru:53752,rf:40441,
+ f:'200406/000020040626000016/',doc:'jnj-20251228.htm',r:{pre:'R78',tax:'R77',paid:'R83',rev:'R112'},
+ note:'Profit for 2025 is raised by a one-off release of about $7bn set aside for talc lawsuits. The Ireland figure is printed rounded, as $0.6bn. Switzerland ($0.5bn) is also named.'},
+{n:'Merck',sec:'Pharma',fy:'Year to Dec 2025',ptd:-4948,ptf:26015,cu:403,cfo:4072,def:-1671,tot:2804,pd:1583,pi:null,po:4503,pt:6086,ru:36510,rf:28501,
+ f:'310158/000031015826000063/',doc:'mrk-20251231.htm',r:{pre:'R110',tax:'R111',paid:'R113',rev:'R120'},
+ note:'Merck names Switzerland ($2.1bn) and the Netherlands ($1.6bn) instead of Ireland.'},
+{n:'Pfizer',sec:'Pharma',fy:'Year to Dec 2025',ptd:776,ptf:6744,cu:556,cfo:1310,def:-2133,tot:-266,pd:2830,pi:1016,po:842,pt:4688,ru:37078,rf:25501,
+ f:'78003/000007800326000026/',doc:'pfe-20251231.htm',r:{pre:'R69',tax:'R70',paid:'R72',rev:'R136'},
+ note:'Pfizer\'s tax charge for the year is a net credit, because of $2.1bn of tax it expects to save in later years.'},
+{n:'Bristol Myers Squibb',sec:'Pharma',fy:'Year to Dec 2025',ptd:-19,ptf:9347,cu:1699,cfo:1538,def:-965,tot:2272,pd:2406,pi:179,po:679,pt:3264,ru:33279,rf:14915,
+ f:'14272/000001427226000004/',doc:'bmy-20251231.htm',r:{pre:'R77',tax:'R76',paid:'R82',rev:'R58'},
+ note:'Sales abroad include $1.1bn the report lists as "other" without a country. Switzerland ($0.3bn) is also named.'},
+{n:'Gilead',sec:'Pharma',fy:'Year to Dec 2025',ptd:8310,ptf:1486,cu:871,cfo:256,def:159,tot:1286,pd:2722,pi:null,po:493,pt:3215,ru:20876,rf:8567,
+ f:'882095/000088209526000006/',doc:'gild-20251231.htm',r:{pre:'R98',tax:'R99',paid:'R104',rev:'R45'},
+ note:'Gilead paid much more tax in cash ($3.2bn) than it charged in its accounts ($1.3bn). The cash includes $1.3bn, the last instalment of a one-off US tax on profits it had built up abroad, from the 2017 US tax reform. Gilead names Australia ($0.3bn) instead of Ireland.'},
+{n:'Amgen',sec:'Pharma',fy:'Year to Dec 2025',ptd:8220,ptf:756,cu:994,cfo:971,def:-700,tot:1265,pd:3390,pi:null,po:910,pt:4300,ru:26419,rf:10332,
+ f:'318154/000031815426000010/',doc:'amgn-20251231.htm',r:{pre:'R67',tax:'R68',paid:'R74',rev:'R55'},
+ note:'Amgen names Puerto Rico ($0.6bn) instead of Ireland. Puerto Rico is a US territory but is taxed as a foreign country for this purpose.'},
+{n:'Eli Lilly',sec:'Pharma',fy:'Year to Dec 2025',ptd:13895,ptf:11836,est:true,cu:4639,cfo:2159,def:-1707,tot:5091,pd:3300,pi:6600,po:914,pt:10814,ru:43481,rf:21698,
+ f:'59478/000005947826000013/',doc:'lly-20251231.htm',r:{pre:'R84',tax:'R82',paid:'R83',rev:'R49'},
+ note:'Lilly does not print its US and foreign profit in dollars. It says its US and Puerto Rican companies made about 54% of pre-tax profit, so the split here is estimated from that rounded figure. Its US and Ireland tax figures are printed rounded, as $3.3bn and $6.6bn.'},
+{n:'Apple',sec:'Tech',fy:'Year to Sep 2025',ptd:50729,ptf:82000,est:true,cu:13167,cfo:8891,def:-1339,tot:20719,pd:null,pi:null,po:null,pt:null,ru:151790,rf:264371,
+ f:'320193/000032019325000079/',doc:'aapl-20250927.htm',r:{pre:'R50',tax:'R51',rev:'R69'},
+ note:'Apple\'s year ended in September 2025, before the rule on naming countries applied, so there is no breakdown of tax paid. Its next report, expected around the end of October 2026, should include one. US profit is worked out as total profit minus foreign profit, which Apple gives rounded as $82.0bn.'},
+{n:'Microsoft',sec:'Tech',fy:'Year to Jun 2026',ptd:103591,ptf:62343,cu:5174,cfo:12587,def:14424,tot:32185,pd:9163,pi:6495,po:5530,pt:21188,ru:170794,rf:161045,
+ f:'789019/000119312526323660/',doc:'msft-20260630.htm',r:{pre:'R78',tax:'R77',paid:'R82',rev:'R109'},
+ note:'Microsoft counts sales to device makers and some large multinational customers in its US figure, because it cannot tell where they end up.'},
+{n:'Alphabet',sec:'Tech',fy:'Year to Dec 2025',ptd:143591,ptf:15235,cu:13378,cfo:5028,def:8250,tot:26656,pd:16577,pi:null,po:4949,pt:21526,ru:194229,rf:208607,
+ f:'1652044/000165204426000018/',doc:'goog-20251231.htm',r:{pre:'R83',tax:'R84',paid:'R88',rev:'R45'},
+ note:'Alphabet names Brazil ($1.4bn) instead of Ireland.'},
+{n:'Meta',sec:'Tech',fy:'Year to Dec 2025',ptd:79644,ptf:6288,cu:3565,cfo:3154,def:18755,tot:25474,pd:4449,pi:567,po:2562,pt:7578,ru:74780,rf:126186,
+ f:'1326801/000162828026003942/',doc:'meta-20251231.htm',r:{pre:'R81',tax:'R82',paid:'R85',rev:'R46'},
+ note:'Meta\'s tax charge for 2025 includes a one-off charge of $15.9bn. After a 2025 change in US tax law, Meta no longer expects to use some tax savings it had counted on for future years, and most of the charge reflects that. Brazil ($0.9bn) and India ($0.7bn) are also named.'},
+{n:'Oracle',sec:'Tech',fy:'Year to May 2026',ptd:8693,ptf:10861,cu:1379,cfo:2005,def:-917,tot:2467,pd:2709,pi:null,po:995,pt:3704,ru:39835,rf:27522,
+ f:'1341439/000119312526277521/',doc:'orcl-20260531.htm',r:{pre:'R78',tax:'R79',paid:'R81',rev:'R90'},
+ note:'Oracle names Japan, India and Korea (a refund) instead of Ireland.'},
+{n:'Salesforce',sec:'Tech',fy:'Year to Jan 2026',ptd:6627,ptf:2893,cu:485,cfo:619,def:959,tot:2063,pd:790,pi:92,po:400,pt:1282,ru:null,rf:null,
+ f:'1108524/000110852426000060/',doc:'crm-20260131.htm',r:{pre:'R79',tax:'R80',paid:'R82',rev:'R42'},
+ note:'Salesforce reports sales for the Americas, not the US alone, so its sales split is not shown.'},
+{n:'Intel',sec:'Tech',fy:'Year to Dec 2025',ptd:-3231,ptf:4788,cu:292,cfo:910,def:329,tot:1531,pd:1386,pi:null,po:913,pt:2299,ru:15757,rf:37096,
+ f:'50863/000005086326000011/',doc:'intc-20251227.htm',r:{pre:'R72',tax:'R72',paid:'R78',rev:'R56'},
+ note:'Intel\'s total profit was small ($1.6bn), so its shares swing widely. It names China and Israel instead of Ireland. Sales are counted by where customers are billed.'},
+{n:'Amazon',sec:'Tech',fy:'Year to Dec 2025',ptd:89537,ptf:7774,cu:3287,cfo:4330,def:11470,tot:19087,pd:4876,pi:null,po:3419,pt:8295,ru:489657,rf:227267,
+ f:'1018724/000101872426000004/',doc:'amzn-20251231.htm',r:{pre:'R82',tax:'R81',paid:'R80',rev:'R89'},
+ note:'Amazon\'s cash tax table splits tax only into US and international, and names no country.'}
+];
+D.forEach(d=>{d.pp=d.ptd+d.ptf;d.fps=100*d.ptf/d.pp;d.frs=d.ru?100*d.rf/(d.ru+d.rf):null;
+  d.key=d.frs==null?-1e9:Math.min(d.fps,100)-d.frs;d.url=E+d.f+d.doc;d.R=k=>d.r[k]?E+d.f+d.r[k]+'.htm':null;});
+const bn=m=>{const a=Math.abs(m);return (m<0?'−':'')+'$'+(a>=1000?(a/1000).toFixed(1)+'bn':Math.round(a)+'m')};
+const pc=x=>Math.round(x)+'%';
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const lnk=(u,t)=>u?`<a href="${u}" target="_blank" rel="noopener">${t}</a>`:'';
+
+/* ---------- findings ---------- */
+(function(){
+  const rep=D.filter(d=>d.pi!=null), sum=rep.reduce((a,d)=>a+d.pi,0);
+  const L=D.find(d=>d.n==='Eli Lilly'), M=D.find(d=>d.n==='Microsoft'), A=D.find(d=>d.n==='Alphabet');
+  const non=D.filter(d=>d.pi==null&&d.pt!=null), none=D.filter(d=>d.pt==null);
+  const W=n=>['zero','one','two','three','four','five','six','seven','eight','nine','ten'][n]||n, Wc=n=>{const w=String(W(n));return w[0].toUpperCase()+w.slice(1)};
+  const B=m=>'$'+(m/1000).toFixed(1)+' billion';
+  const g=n=>D.find(d=>d.n===n);
+  const rest=sum-L.pi-M.pi;
+  const mbr=(name,w,col,val)=>`<div class="mbr"><span>${name}</span><span class="t"><i style="width:${w}%;background:${col}"></i></span><span class="v">${val}</span></div>`;
+  const pharma=['AbbVie','Merck','Bristol Myers Squibb'].map(g);
+  const tech=[['Alphabet','Google'],['Meta','Facebook'],['Amazon','Amazon']].map(([n])=>g(n));
+  const dots=[...rep.map(()=>'<i class="on" title="Names Ireland"></i>'),...non.map(()=>'<i class="off" title="Below the 5% line"></i>'),...none.map(()=>'<i class="na" title="Not yet covered"></i>')].join('');
+  document.getElementById('findtext').innerHTML=`<h2>What we found</h2>
+  <div class="fgrid">
+    <div class="fc lead">
+      <span class="tag">Tax paid to Ireland</span>
+      <div class="big">${B(sum)}</div>
+      <h3>Some US multinationals pay a lot of tax in Ireland</h3>
+      <p>${Wc(rep.length)} of the 16 groups say exactly how much income tax they paid here. Together it came to ${B(sum)} in one year, and two groups paid most of it.</p>
+      <div class="stack"><i style="flex:${L.pi};background:var(--ire)" title="Eli Lilly"></i><i style="flex:${M.pi};background:var(--ire);opacity:.65" title="Microsoft"></i><i style="flex:${rest};background:var(--mut);opacity:.45" title="Other six groups"></i></div>
+      <div class="stacklab"><span><i class="sw" style="background:var(--ire)"></i>Eli Lilly ${B(L.pi)}</span><span><i class="sw" style="background:var(--ire);opacity:.65"></i>Microsoft ${B(M.pi)}</span><span><i class="sw" style="background:var(--mut);opacity:.45"></i>The other ${W(rep.length-2)} ${B(rest)}</span></div>
+    </div>
+    <div class="fc">
+      <span class="tag">Eli Lilly</span>
+      <h3>Eli Lilly paid more tax to Ireland than in the US</h3>
+      <div class="mb">${mbr('Ireland',100,'var(--ire)','<b>'+B(L.pi)+'</b>')}${mbr('US',100*L.pd/L.pi,'var(--us)','<b>'+B(L.pd)+'</b>')}</div>
+      <p>It paid Ireland twice what it paid in US tax.</p>
+    </div>
+    <div class="fc">
+      <span class="tag">Pharma</span>
+      <h3>Many pharma groups sell mostly in the US but record their profits elsewhere</h3>
+      <div class="mb">${pharma.map(d=>mbr(d.n==='Bristol Myers Squibb'?'BMS':d.n,100*d.ru/(d.ru+d.rf),'var(--us)',`${pc(100*d.ru/(d.ru+d.rf))} of sales<br><span class="lossv">US loss</span>`)).join('')}</div>
+      <p>Bars show the share of sales made in the US. Yet all three report a loss there. Profit is recorded where the company that owns the patents or makes the product is based, and for these groups that is mostly outside the US.</p>
+    </div>
+    <div class="fc">
+      <span class="tag">Tech</span>
+      <h3>The big tech groups are different</h3>
+      <div class="mb">${tech.map(d=>mbr(d.n,100*d.ptd/d.pp,'var(--profit)',`<b>${pc(100*d.ptd/d.pp)}</b> in US`)).join('')}</div>
+      <p>Alphabet (which owns Google), Meta (which owns Facebook and Instagram) and Amazon record about nine-tenths of their profit in the US.</p>
+    </div>
+    <div class="fc">
+      <span class="tag">The 5% rule</span>
+      <h3>Not every group names Ireland</h3>
+      <div class="dots" aria-label="${rep.length} name Ireland, ${non.length} below the line, ${none.length} not covered">${dots}</div>
+      <div class="stacklab"><span><i class="sw" style="background:var(--ire);border-radius:50%"></i>${Wc(rep.length)} name Ireland</span><span><i class="sw" style="border:2px solid var(--mut);border-radius:50%"></i>${Wc(non.length)} below 5%</span><span><i class="sw" style="background:var(--line);border-radius:50%"></i>${Wc(none.length)} not yet covered</span></div>
+      <p>Groups only have to name a country that receives at least 5% of the tax they pay. That does not mean the others pay little here: for Alphabet, 5% could be as much as ${B(.05*A.pt)}.</p>
+    </div>
+  </div>`;
+})();
+
+/* ---------- chart 1: tax paid by country ---------- */
+(function(){
+  const box=document.getElementById('c1');
+  const rep=D.filter(d=>d.pi!=null).sort((a,b)=>b.pi/b.pt-a.pi/a.pt);
+  const non=D.filter(d=>d.pi==null&&d.pt!=null).sort((a,b)=>b.pt-a.pt);
+  const none=D.filter(d=>d.pt==null);
+  const row=(d,kind)=>{
+    const r=el('div','row');r.append(el('div','nm',d.n));
+    const b=el('div','bar'+(kind==='none'?' none':''));
+    if(kind!=='none'){
+      [['us',d.pd,'United States'],['ire',d.pi,'Ireland'],['oth',d.po,kind==='non'?'Other countries, including Ireland':'Other countries']]
+      .filter(s=>s[1]>0).forEach(s=>{const g=el('div','seg '+s[0]);g.style.flex=s[1]+' 1 0';g.title=`${s[2]}: ${bn(s[1])}`;b.append(g)});
+    }
+    r.append(b);
+    r.append(el('div','val',kind==='rep'?`<b>${bn(d.pi)}</b> to Ireland · ${pc(100*d.pi/d.pt)}`
+      :kind==='non'?`Ireland under ${bn(.05*d.pt)}`:'No breakdown yet'));
+    return r};
+  box.append(el('div','grp','Name Ireland'));rep.forEach(d=>box.append(row(d,'rep')));
+  box.append(el('div','grp','Ireland below the 5% line'));
+  box.append(el('p','grpnote','These groups do not name Ireland, so Ireland received less than 5% of their cash tax. Any Irish tax is inside "other countries". This does not mean they pay little tax in Ireland: 5% of a large bill can still be a large sum, and a single year of cash payments is not the whole picture.'));
+  non.forEach(d=>box.append(row(d,'non')));
+  box.append(el('div','grp','Not yet covered by the rule'));none.forEach(d=>box.append(row(d,'none')));
+  const sum=rep.reduce((a,d)=>a+d.pi,0),cap=non.reduce((a,d)=>a+.05*d.pt,0);
+  document.getElementById('c1note').innerHTML=`The ${rep.length} groups that name Ireland paid it <b>${bn(sum)}</b> between them. The ${non.length} that do not could each have paid Ireland up to 5% of their total without naming it, up to <b>${bn(cap)}</b> more in all.`;
+  const t=document.getElementById('t1');
+  t.innerHTML='<tr><th>Group</th><th>US</th><th>Ireland</th><th>Other</th><th>Total paid</th><th>Ireland share</th><th>Source</th></tr>'+
+    [...rep,...non,...none].map(d=>`<tr><td>${d.n}</td><td>${d.pd==null?'n/a':bn(d.pd)}</td><td>${d.pi!=null?bn(d.pi):d.pt!=null?'under '+bn(.05*d.pt):'n/a'}</td><td>${d.po==null?'n/a':bn(d.po)}</td><td>${d.pt==null?'n/a':bn(d.pt)}</td><td>${d.pi!=null?pc(100*d.pi/d.pt):d.pt!=null?'under 5%':'n/a'}</td><td>${lnk(d.R('paid')||d.R('tax'),'Filing table')}</td></tr>`).join('');
+})();
+
+/* ---------- chart 2: sales vs profit abroad ---------- */
+const RANK=[...D].sort((a,b)=>b.key-a.key);
+(function(){
+  const box=document.getElementById('c2');
+  RANK.filter(d=>d.frs!=null).forEach(d=>{
+    const over=d.ptd<0,p=Math.min(d.fps,100),gap=d.fps-d.frs;
+    const r=el('div','row');r.append(el('div','nm',d.n+(d.est?'*':'')));
+    const t=el('div','trk');
+    const a=el('div','b rev');a.style.width=d.frs+'%';a.title=`Share of sales abroad: ${pc(d.frs)}`;
+    const b=el('div','b pro'+(over?' over':''));b.style.width=p+'%';b.title=over?`US loss of ${bn(-d.ptd)}`:`Share of profit abroad: ${pc(d.fps)}`;
+    t.append(a,b);r.append(t);
+    r.append(el('div','val',over?`<b>US loss</b> of ${bn(-d.ptd)}<br>Abroad: ${pc(d.frs)} of sales`:`<b>${pc(d.fps)} of profit</b> abroad<br>${pc(d.frs)} of sales abroad`));
+    box.append(r)});
+  document.getElementById('t2').innerHTML='<tr><th>Group</th><th>Sales abroad</th><th>Profit abroad</th><th>US pre-tax profit</th><th>Foreign pre-tax profit</th></tr>'+
+    RANK.filter(d=>d.frs!=null).map(d=>`<tr><td>${d.n}</td><td>${pc(d.frs)}</td><td>${d.ptd<0?'over 100%':pc(d.fps)}</td><td>${bn(d.ptd)}</td><td>${bn(d.ptf)}</td></tr>`).join('');
+})();
+
+/* ---------- group cards ---------- */
+(function(){
+  const box=document.getElementById('cards');
+  RANK.forEach((d,i)=>{
+    const c=el('details','card');c.id='g-'+d.n.toLowerCase().replace(/[^a-z]+/g,'-');if(i===0)c.open=true;
+    const chip=d.frs==null?`<span class="chip">No US sales figure</span>`:d.ptd<0?`<span class="chip loss">Loss in the US</span>`
+      :`<span class="chip${d.key>0?' up':''}">Abroad: ${pc(d.frs)} of sales, ${pc(d.fps)} of profit</span>`;
+    const s=el('summary',null,`<span class="rk">${i+1}</span><span><span class="cn">${d.n}</span><br><span class="cs">${d.sec} · ${d.fy}</span></span>${chip}`);
+    c.append(s);
+    const usr=d.ru?100*d.ru/(d.ru+d.rf):null, usp=100*d.ptd/d.pp;
+    let plain='';
+    if(usr!=null){
+      if(d.ptd<0) plain=`<b>${d.n}</b> makes <b>${pc(usr)}</b> of its sales in the US but reports a US <b>loss</b> of ${bn(-d.ptd)}. All of its ${bn(d.pp)} pre-tax profit, and more, is reported abroad.`;
+      else if(usp<usr-5) plain=`<b>${d.n}</b> makes <b>${pc(usr)}</b> of its sales in the US but reports only <b>${pc(usp)}</b> of its pre-tax profit there.`;
+      else plain=`<b>${d.n}</b> makes <b>${pc(usr)}</b> of its sales in the US and reports <b>${pc(usp)}</b> of its pre-tax profit there.`;
+    } else plain=`<b>${d.n}</b> reports <b>${pc(usp)}</b> of its pre-tax profit in the US. It does not report US sales separately.`;
+    if(d.pi!=null) plain+=` It paid <b>${bn(d.pi)}</b> in income tax to Ireland, ${pc(100*d.pi/d.pt)} of all the income tax it paid.`;
+    else if(d.pt!=null) plain+=` It does not name Ireland, so Ireland received less than ${bn(.05*d.pt)} of its cash tax.`;
+
+    const sales=d.ru?`<div class="split"><i class="a" style="flex:${d.ru} 1 0"></i><i class="b2" style="flex:${d.rf} 1 0"></i></div>
+      <div class="splitlab"><span>US ${bn(d.ru)} (${pc(usr)})</span><span>Abroad ${bn(d.rf)} (${pc(100-usr)})</span></div>`
+      :`<p class="note">Not reported for the US alone.</p>`;
+    let prof;
+    if(d.ptd<0){const m=Math.max(-d.ptd,d.ptf);
+      prof=`<div class="dvg"><div class="l"><i style="width:${100*-d.ptd/m}%"></i></div><div class="m"></div><div class="r"><i style="width:${100*d.ptf/m}%"></i></div></div>
+      <div class="splitlab"><span style="color:var(--loss)">US loss ${bn(-d.ptd)}</span><span>Abroad ${bn(d.ptf)}</span></div>`;}
+    else prof=`<div class="split p"><i class="a" style="flex:${d.ptd} 1 0"></i><i class="b2" style="flex:${d.ptf} 1 0"></i></div>
+      <div class="splitlab"><span>US ${bn(d.ptd)} (${pc(usp)})</span><span>Abroad ${bn(d.ptf)} (${pc(100-usp)})</span></div>`;
+    const rate=d.tot/d.pp*100;
+    const paid=d.pt!=null?`<div class="split"><i style="flex:${d.pd} 1 0;background:var(--us)"></i>${d.pi?`<i style="flex:${d.pi} 1 0;background:var(--ire)"></i>`:''}<i style="flex:${Math.max(d.po,0)} 1 0;background:var(--oth)"></i></div>
+      <div class="splitlab"><span>US ${bn(d.pd)}</span><span style="color:var(--ire)">Ireland ${d.pi!=null?bn(d.pi):'under '+bn(.05*d.pt)}</span><span>Other ${bn(d.po)}</span></div>`
+      :`<p class="note">Not broken down by country in this report.</p>`;
+    const body=el('div','cbody',`
+      <p class="plain">${plain}</p>
+      <div class="blk"><h4>Sales <span>${lnk(d.R('rev'),'Source table')}</span></h4>${sales}</div>
+      <div class="blk"><h4>Pre-tax profit${d.est?' (part estimated)':''} <span>${lnk(d.R('pre'),'Source table')}</span></h4>${prof}</div>
+      <div class="blk"><h4>Tax <span>${lnk(d.R('tax'),'Tax charged')} ${lnk(d.R('paid'),'Tax paid')}</span></h4>
+        <div class="kv">
+          <div><span class="k">Tax charged in the accounts</span><span class="v">${bn(d.tot)}</span><span class="s">${rate>=0?pc(rate)+' of pre-tax profit':'a net credit'}</span></div>
+          <div><span class="k">Tax paid in cash</span><span class="v">${d.pt!=null?bn(d.pt):'n/a'}</span><span class="s">${d.pt!=null?'in the same year':'no breakdown in this report'}</span></div>
+        </div>
+        ${paid}
+      </div>
+      ${d.note?`<p class="cnote"><b>Note.</b> ${d.note}</p>`:''}
+      <div class="src">${lnk(d.url,'Full annual report (10-K)')}</div>`);
+    c.append(body);box.append(c);
+  });
+})();
+/* ---------- tell a parent page (e.g. WordPress) how tall this page is ---------- */
+(function(){
+  if(window.parent===window) return;
+  let last=0;
+  const send=()=>{const h=Math.ceil(document.documentElement.scrollHeight);if(h!==last){last=h;try{parent.postMessage({dcTaxHeight:h},'*')}catch(e){}}};
+  window.addEventListener('load',send);window.addEventListener('resize',send);
+  document.addEventListener('toggle',send,true);
+  if('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
+
+</body>
+</html>
